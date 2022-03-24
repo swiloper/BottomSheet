@@ -23,17 +23,28 @@ final class ModalViewController: UIViewController {
         return view
     }()
     
+    private let defaultSheetHeight: CGFloat = 300.0
+    private let dismissibleSheetHeight: CGFloat = 200.0
+    private let maximumSheetHeight: CGFloat = UIScreen.main.bounds.height - 64.0
+    
+    private var sheetBottomConstraint: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(dimmedView)
         view.addSubview(bottomSheetView)
         setupConstraints()
-        let tapGastureRecogniser = UITapGestureRecognizer(target: self, action: #selector(handleDismissAction))
-        dimmedView.addGestureRecognizer(tapGastureRecogniser)
+        setupGestureRecognizers()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        animateShowDimmedView()
+        animatePresentSheet()
     }
     
     @objc func handleDismissAction() {
-        dismiss(animated: false)
+        animateDismissController()
     }
     
     private func setupConstraints() {
@@ -48,8 +59,72 @@ final class ModalViewController: UIViewController {
             
             bottomSheetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomSheetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomSheetView.heightAnchor.constraint(equalToConstant: 300)
+            bottomSheetView.heightAnchor.constraint(equalToConstant: defaultSheetHeight)
         ])
+        
+        sheetBottomConstraint = bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: defaultSheetHeight)
+        sheetBottomConstraint?.isActive = true
+    }
+
+    private func setupGestureRecognizers() {
+        let tapGastureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDismissAction))
+        dimmedView.addGestureRecognizer(tapGastureRecognizer)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(gesture:)))
+        panGesture.delaysTouchesBegan = false
+        panGesture.delaysTouchesEnded = false
+        view.addGestureRecognizer(panGesture)
+    }
+    
+    @objc func handlePanGesture(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+
+        let newHeight = defaultSheetHeight - translation.y
+        
+        let isDraggingUp = translation.y < 0
+
+        switch gesture.state {
+        case .changed:
+            if newHeight < defaultSheetHeight {
+                sheetBottomConstraint?.constant = translation.y
+                view.layoutIfNeeded()
+            }
+        case .ended:
+            if newHeight < dismissibleSheetHeight {
+                animateDismissController()
+            } else if newHeight < defaultSheetHeight || isDraggingUp {
+                animatePresentSheet()
+            }
+        default:
+            break
+        }
+    }
+    
+    private func animatePresentSheet() {
+        UIView.animate(withDuration: 0.3) {
+            self.sheetBottomConstraint?.constant = 0
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func animateShowDimmedView() {
+        dimmedView.alpha = 0
+        UIView.animate(withDuration: 0.4) {
+            self.dimmedView.alpha = self.maxDimmedAlpha
+        }
+    }
+    
+    private func animateDismissController() {
+        dimmedView.alpha = maxDimmedAlpha
+        UIView.animate(withDuration: 0.4) {
+            self.dimmedView.alpha = 0
+        } completion: { _ in
+            self.dismiss(animated: false)
+        }
+
+        UIView.animate(withDuration: 0.3) {
+            self.sheetBottomConstraint?.constant = self.defaultSheetHeight
+            self.view.layoutIfNeeded()
+        }
     }
 }
