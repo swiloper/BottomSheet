@@ -7,19 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D929BEA827ECF0B700B04B91 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929BEA727ECF0B700B04B91 /* ModalViewController.swift */; };
+		D929BEAA27ECF0D900B04B91 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929BEA927ECF0D900B04B91 /* BottomSheetView.swift */; };
 		D944885D27ECE981005EF37C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D944885C27ECE981005EF37C /* AppDelegate.swift */; };
 		D944885F27ECE981005EF37C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D944885E27ECE981005EF37C /* SceneDelegate.swift */; };
-		D944886127ECE981005EF37C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D944886027ECE981005EF37C /* ViewController.swift */; };
+		D944886127ECE981005EF37C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D944886027ECE981005EF37C /* MainViewController.swift */; };
 		D944886427ECE981005EF37C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D944886227ECE981005EF37C /* Main.storyboard */; };
 		D944886627ECE982005EF37C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D944886527ECE982005EF37C /* Assets.xcassets */; };
 		D944886927ECE982005EF37C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D944886727ECE982005EF37C /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D929BEA727ECF0B700B04B91 /* ModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
+		D929BEA927ECF0D900B04B91 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		D944885927ECE981005EF37C /* BottomSheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BottomSheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D944885C27ECE981005EF37C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D944885E27ECE981005EF37C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		D944886027ECE981005EF37C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D944886027ECE981005EF37C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		D944886327ECE981005EF37C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D944886527ECE982005EF37C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D944886827ECE982005EF37C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -58,7 +62,9 @@
 			children = (
 				D944885C27ECE981005EF37C /* AppDelegate.swift */,
 				D944885E27ECE981005EF37C /* SceneDelegate.swift */,
-				D944886027ECE981005EF37C /* ViewController.swift */,
+				D944886027ECE981005EF37C /* MainViewController.swift */,
+				D929BEA727ECF0B700B04B91 /* ModalViewController.swift */,
+				D929BEA927ECF0D900B04B91 /* BottomSheetView.swift */,
 				D944886227ECE981005EF37C /* Main.storyboard */,
 				D944886527ECE982005EF37C /* Assets.xcassets */,
 				D944886727ECE982005EF37C /* LaunchScreen.storyboard */,
@@ -137,7 +143,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D944886127ECE981005EF37C /* ViewController.swift in Sources */,
+				D929BEA827ECF0B700B04B91 /* ModalViewController.swift in Sources */,
+				D929BEAA27ECF0D900B04B91 /* BottomSheetView.swift in Sources */,
+				D944886127ECE981005EF37C /* MainViewController.swift in Sources */,
 				D944885D27ECE981005EF37C /* AppDelegate.swift in Sources */,
 				D944885F27ECE981005EF37C /* SceneDelegate.swift in Sources */,
 			);
