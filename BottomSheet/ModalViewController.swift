@@ -24,9 +24,11 @@ final class ModalViewController: UIViewController {
     }()
     
     private let defaultSheetHeight: CGFloat = 300.0
+    private lazy var currentSheetHeight: CGFloat = defaultSheetHeight
     private let dismissibleSheetHeight: CGFloat = 200.0
     private let maximumSheetHeight: CGFloat = UIScreen.main.bounds.height - 64.0
     
+    private var sheetHeightConstraint: NSLayoutConstraint?
     private var sheetBottomConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
@@ -59,11 +61,14 @@ final class ModalViewController: UIViewController {
             
             bottomSheetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomSheetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomSheetView.heightAnchor.constraint(equalToConstant: defaultSheetHeight)
+            
         ])
         
         sheetBottomConstraint = bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: defaultSheetHeight)
         sheetBottomConstraint?.isActive = true
+        
+        sheetHeightConstraint = bottomSheetView.heightAnchor.constraint(equalToConstant: defaultSheetHeight)
+        sheetHeightConstraint?.isActive = true
     }
 
     private func setupGestureRecognizers() {
@@ -76,24 +81,37 @@ final class ModalViewController: UIViewController {
         view.addGestureRecognizer(panGesture)
     }
     
+    private func animateSheetHeight(_ height: CGFloat) {
+        UIView.animate(withDuration: 0.4) {
+            self.sheetHeightConstraint?.constant = height
+            self.view.layoutIfNeeded()
+        }
+        currentSheetHeight = height
+    }
+    
     @objc func handlePanGesture(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
-
-        let newHeight = defaultSheetHeight - translation.y
-        
+        let newHeight = currentSheetHeight - translation.y
         let isDraggingUp = translation.y < 0
 
         switch gesture.state {
         case .changed:
-            if newHeight < defaultSheetHeight {
-                sheetBottomConstraint?.constant = translation.y
+            if newHeight < maximumSheetHeight {
+                sheetHeightConstraint?.constant = newHeight
                 view.layoutIfNeeded()
             }
         case .ended:
             if newHeight < dismissibleSheetHeight {
                 animateDismissController()
-            } else if newHeight < defaultSheetHeight || isDraggingUp {
-                animatePresentSheet()
+            }
+            else if newHeight < defaultSheetHeight {
+                animateSheetHeight(defaultSheetHeight)
+            }
+            else if newHeight < maximumSheetHeight && !isDraggingUp {
+                animateSheetHeight(defaultSheetHeight)
+            }
+            else if newHeight > defaultSheetHeight && isDraggingUp {
+                animateSheetHeight(maximumSheetHeight)
             }
         default:
             break
