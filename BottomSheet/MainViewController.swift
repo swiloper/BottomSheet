@@ -8,6 +8,7 @@
 import UIKit
 
 final class MainViewController: UIViewController {
+    /// The button that shows the BottomSheet.
     private let showingButton: UIButton = {
         let button = UIButton()
         button.setTitle("Show bottom sheet", for: .normal)
@@ -24,6 +25,7 @@ final class MainViewController: UIViewController {
         showingButton.addTarget(self, action: #selector(showBottomSheet), for: .touchUpInside)
     }
     
+    /// This function sets up the constrains for the views.
     private func setupConstraints() {
         showingButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

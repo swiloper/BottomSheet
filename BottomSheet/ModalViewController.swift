@@ -9,6 +9,7 @@ import UIKit
 
 final class ModalViewController: UIViewController {
     private let maxDimmedAlpha: CGFloat = 0.6
+    /// View, which will dim the previous controller.
     private lazy var dimmedView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
@@ -25,7 +26,9 @@ final class ModalViewController: UIViewController {
     
     private let defaultSheetHeight: CGFloat = 300.0
     private lazy var currentSheetHeight: CGFloat = defaultSheetHeight
+    /// The height at which BottomSheet will automatically disappear.
     private let dismissibleSheetHeight: CGFloat = 200.0
+    /// Maximum height of the BottomSheet.
     private let maximumSheetHeight: CGFloat = UIScreen.main.bounds.height - 64.0
     
     private var sheetHeightConstraint: NSLayoutConstraint?
@@ -91,26 +94,34 @@ final class ModalViewController: UIViewController {
     
     @objc func handlePanGesture(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
-        let newHeight = currentSheetHeight - translation.y
+        let newSheetHeight = currentSheetHeight - translation.y
+        // If translation.y is negative, then the direction of dragging is up
         let isDraggingUp = translation.y < 0
 
         switch gesture.state {
         case .changed:
-            if newHeight < maximumSheetHeight {
-                sheetHeightConstraint?.constant = newHeight
+            // This state will occur when user is dragging
+            if newSheetHeight < maximumSheetHeight {
+                // Keep updating the height constraint
+                sheetHeightConstraint?.constant = newSheetHeight
                 view.layoutIfNeeded()
             }
         case .ended:
-            if newHeight < dismissibleSheetHeight {
+            // This happens when user stop drag
+            // If new height is below dismissibleSheetHeight, dismiss controller
+            if newSheetHeight < dismissibleSheetHeight {
                 animateDismissController()
             }
-            else if newHeight < defaultSheetHeight {
+            // If new height is below default, animate back to defaultSheetHeight
+            else if newSheetHeight < defaultSheetHeight {
                 animateSheetHeight(defaultSheetHeight)
             }
-            else if newHeight < maximumSheetHeight && !isDraggingUp {
+            // If new height is below maximumSheetHeight and going down, set to defaultSheetHeight
+            else if newSheetHeight < maximumSheetHeight && !isDraggingUp {
                 animateSheetHeight(defaultSheetHeight)
             }
-            else if newHeight > defaultSheetHeight && isDraggingUp {
+            // If new height is below maximumSheetHeight and going up, set to maximumSheetHeight at top
+            else if newSheetHeight > defaultSheetHeight && isDraggingUp {
                 animateSheetHeight(maximumSheetHeight)
             }
         default:
@@ -118,6 +129,7 @@ final class ModalViewController: UIViewController {
         }
     }
     
+    /// This function animates the appearance of the controller.
     private func animatePresentSheet() {
         UIView.animate(withDuration: 0.3) {
             self.sheetBottomConstraint?.constant = 0
@@ -125,6 +137,7 @@ final class ModalViewController: UIViewController {
         }
     }
     
+    /// This function animates the appearance of the dimmed view.
     private func animateShowDimmedView() {
         dimmedView.alpha = 0
         UIView.animate(withDuration: 0.4) {
@@ -132,6 +145,7 @@ final class ModalViewController: UIViewController {
         }
     }
     
+    /// This function animates disappearance of BottomSheetController.
     private func animateDismissController() {
         dimmedView.alpha = maxDimmedAlpha
         UIView.animate(withDuration: 0.4) {
